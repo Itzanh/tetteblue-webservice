@@ -1,0 +1,9 @@
+{
+    "port": 2317,
+    "max_limit": 100,
+    "ssl_enabled": false,
+    "ssl": {
+        "keyPath": "",
+        "certPath": ""
+    }
+}
