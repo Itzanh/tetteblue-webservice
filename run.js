@@ -187,7 +187,7 @@ function searchUsername(req, res) {
         return
     }
 
-    connection.query('SELECT DISTINCT username FROM `message` WHERE username LIKE ? LIMIT 10', [request.username.toLowerCase() + '%'], function(error, results, fields) {
+    connection.query('SELECT DISTINCT username AS user_name, (SELECT user_id FROM `message` WHERE username = user_name ORDER BY user_id DESC LIMIT 1) AS user_id FROM `message` WHERE username LIKE ? LIMIT 10', [request.username.toLowerCase() + '%'], function(error, results, fields) {
         if (error) throw error;
 
         res.send(results);
