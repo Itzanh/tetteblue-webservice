@@ -63,6 +63,12 @@ function getMessages(req, res) {
 
         request.dateEnd = new Date(request.dateEnd);
     }
+    if (request.search != null && request.search != undefined) {
+        if (typeof(request.username) != 'string') {
+            res.sendStatus(400);
+            return
+        }
+    }
 
     const parameters = [];
     var sqlQuery = 'SELECT * FROM `message`';
@@ -79,6 +85,14 @@ function getMessages(req, res) {
     } else if (request.dateEnd != null && request.dateEnd != undefined) {
         parameters.push(request.dateEnd);
         conditions += ' WHERE date_sent <= ?';
+    }
+    if (request.search != null && request.search != undefined) {
+        parameters.push("%" + request.search + "%");
+        if (conditions == "") {
+            conditions += ' WHERE message LIKE ?';
+        } else {
+            conditions += ' AND message LIKE ?';
+        }
     }
 
     parameters.push(request.limit, request.offset);
@@ -136,6 +150,12 @@ function getMessagesByUsername(req, res) {
 
         request.dateEnd = new Date(request.dateEnd);
     }
+    if (request.search != null && request.search != undefined) {
+        if (typeof(request.username) != 'string') {
+            res.sendStatus(400);
+            return
+        }
+    }
 
     const parameters = [request.username];
     var sqlQuery = 'SELECT * FROM `message`';
@@ -148,6 +168,10 @@ function getMessagesByUsername(req, res) {
     if (request.dateEnd != null && request.dateEnd != undefined) {
         parameters.push(request.dateEnd);
         conditions += ' AND date_sent <= ?';
+    }
+    if (request.search != null && request.search != undefined) {
+        parameters.push("%" + request.search + "%");
+        conditions += ' AND message LIKE ?';
     }
 
     parameters.push(request.limit, request.offset);
